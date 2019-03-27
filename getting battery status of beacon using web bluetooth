@@ -1,0 +1,50 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Page Title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <button id="the-button">Try it</button>
+        <script>
+            console.log('Client side code is running ')
+        const button = document.querySelector('#the-button');
+button.addEventListener('click', function() {
+    navigator.bluetooth.requestDevice({
+  acceptAllDevices: true,
+  optionalServices: ['battery_service']
+})
+.then(device => device.gatt.connect())
+    .then(server => {
+  // Getting Battery Service...
+  return server.getPrimaryService('battery_service');
+})
+.then(service => {
+  // Getting Battery Level Characteristic...
+  return service.getCharacteristic('battery_level');
+})
+.then(characteristic => {
+  // Reading Battery Level...
+  return characteristic.readValue();
+})
+.then(value => {
+  console.log('Battery percentage is ' + value.getUint8(0));
+})
+.catch(error => { console.log(error); });
+// 	navigator.bluetooth.requestDevice({
+//         filters: [{
+//     name: 'MiniBeacon_00555'
+//   }],
+// 	}).then(device => {
+// 		console.log('Got device:', device.name);
+// 		console.log('id:', device.id);
+//     })
+//     .catch(err => console.log(err));
+});
+        </script>
+    </head>
+    <body>
+        
+    </body>
+    </html>
